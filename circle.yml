@@ -1,0 +1,16 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  pre:
+    - gem install fpm
+    - sudo apt-get install rpm
+
+test:
+  override:
+    - make build
+    - make deb
+    - make rpm
+  post:
+    - cp -R out ${CIRCLE_ARTIFACTS}

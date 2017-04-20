@@ -1,0 +1,23 @@
+#!/bin/sh
+set -e
+case "$1" in
+  abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+  configure)
+    /opt/hg-agent/bin/postinst
+    if [ -x /etc/init.d/hg-agent ] ; then
+        /usr/sbin/update-rc.d hg-agent defaults
+        service hg-agent start
+    elif [ -f /etc/init/hg-agent.conf ] ; then
+        service hg-agent start
+    else
+        systemctl enable hg-agent
+        systemctl start hg-agent
+    fi
+    ;;
+  *)
+    echo "postinst called with unknown argument \`$1'" >&2
+    exit 1
+    ;;
+esac
+exit 0

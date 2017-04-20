@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+
+# A "switch script" for `hg-agent`.
+#
+# This allows us to package all the dependencies for the various scripts
+# we want to run as part of `hg-agent` in a single PyInstaller distribution and
+# to invoke the particular scripts we want via simple symlinks.
+#
+# We also set process titles here such that it's easy for consumers to identify
+# the provenance of the scripts from the process table.
+
+import diamond_main
+import os
+import setproctitle
+import supervisor.supervisord
+import supervisor.supervisorctl
+import sys
+import time
+
+from hg_agent_periodic import periodic, config, diamond_config
+
+
+def run_diamond():
+    diamond_main.main()
+
+
+def run_periodic():
+    periodic.main()
+
+
+def run_config():
+    config.main()
+
+
+def run_diamond_config():
+    diamond_config.main()
+
+
+def run_supervisorctl():
+    supervisor.supervisorctl.main()
+
+
+def run_supervisord():
+    supervisor.supervisord.main()
+
+
+def main():
+    switch = {'diamond': run_diamond,
+              'periodic': run_periodic,
+              'config': run_config,
+              'diamond-config': run_diamond_config,
+              'supervisorctl': run_supervisorctl,
+              'supervisord': run_supervisord}
+
+    name = os.path.basename(sys.argv[0])
+    try:
+        setproctitle.setproctitle('hg-agent-%s' % name)
+        switch[name]()
+    except KeyError:
+        print ('Invoked with unrecognized command name `%s`.\n'
+               'Options are: %s') % (name, switch.keys())
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+/opt/hg-agent/bin/postinst
+
+if [ -x /etc/init.d/hg-agent ] ; then
+    /sbin/chkconfig --add hg-agent
+    service hg-agent start
+else
+    systemctl enable hg-agent
+    systemctl start hg-agent
+fi

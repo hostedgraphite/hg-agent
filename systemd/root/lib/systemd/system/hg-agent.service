@@ -1,0 +1,22 @@
+# Systemd config for hg-agent.
+[Unit]
+Description=Hosted Graphite agent
+After=syslog.target network.target
+
+[Service]
+Type=simple
+User=hg-agent
+Group=hg-agent
+WorkingDirectory=/var/opt/hg-agent
+ExecStart=/opt/hg-agent/bin/supervisord --nodaemon --configuration /etc/opt/hg-agent/supervisor.conf
+
+RestartSec=1
+Restart=on-failure
+
+# use syslog for logging
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=hg-agent
+
+[Install]
+WantedBy=multi-user.target

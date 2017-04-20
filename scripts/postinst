@@ -1,0 +1,16 @@
+#!/bin/sh
+set -e
+USER=hg-agent
+
+if ! id -u "$USER" >/dev/null 2>/dev/null; then
+  echo "hg-agent: creating $USER..."
+  useradd --system --shell /usr/sbin/nologin \
+          --comment 'Hosted Graphite agent' \
+          --home /var/opt/hg-agent -M \
+          --user-group hg-agent
+fi
+
+mkdir -p /var/opt/hg-agent/drop /var/log/hg-agent
+chown hg-agent:hg-agent /var/opt/hg-agent \
+                  /var/opt/hg-agent/drop \
+                  /var/log/hg-agent

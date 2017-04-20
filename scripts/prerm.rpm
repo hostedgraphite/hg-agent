@@ -1,0 +1,10 @@
+#!/bin/sh
+/opt/hg-agent/bin/prerm
+
+if [ -x /etc/init.d/hg-agent ] ; then
+    service hg-agent stop
+    /sbin/chkconfig --del hg-agent
+else
+    systemctl stop hg-agent
+    systemctl disable hg-agent
+fi

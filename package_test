@@ -1,0 +1,234 @@
+#!/bin/bash
+# Tests for the hg-agent packaging lifecycle.
+
+## Constants
+readonly PACKAGENAME=hg-agent
+readonly SUPERVISORD="/opt/hg-agent/bin/supervisord"
+readonly PERIODIC="/opt/hg-agent/bin/periodic"
+
+## Messages
+
+fail() {
+    echo "FAILURE ($1) $2"
+    exit 1
+}
+
+succeed() {
+    echo "SUCCESS ($1) $2"
+}
+
+waiting() {
+    echo "WAITING ($1)"
+    sleep "$2"
+}
+
+## Package / service actions
+
+do_install() {
+    local pkgtype=$1
+    local svctype=$2
+    local packageroot="/hg-agent/out/$pkgtype/$svctype"
+
+    case "$pkgtype" in
+        rpm)
+            local tool="rpm --install"
+            ;;
+
+        deb)
+            local tool="dpkg --install"
+            ;;
+    esac
+
+    local package="$packageroot/${PACKAGENAME}"*
+    $tool $package \
+        || fail do_install "installing $package"
+}
+
+do_remove() {
+    local pkgtype=$1
+    local svctype=$2
+
+    case "$pkgtype" in
+        rpm)
+            local tool="rpm --erase"
+            ;;
+
+        deb)
+            local tool="dpkg --remove"
+            ;;
+    esac
+
+    $tool $PACKAGENAME \
+        || fail do_remove "removing $PACKAGENAME"
+}
+
+do_stop() {
+    local pkgtype=$1
+    local svctype=$2
+
+    case "$svctype" in
+        sysvinit|upstart)
+            service $PACKAGENAME stop \
+                || fail do_stop "stopping $PACKAGENAME"
+            ;;
+        systemd)
+            systemctl stop $PACKAGENAME \
+                || fail do_stop "stopping $PACKAGENAME"
+            ;;
+        *)
+            fail do_stop "unsupported service type $svctype"
+            ;;
+    esac
+}
+
+do_start() {
+    local pkgtype=$1
+    local svctype=$2
+
+    case "$svctype" in
+        sysvinit|upstart)
+            service $PACKAGENAME start \
+                || fail do_start "starting $PACKAGENAME"
+            ;;
+        systemd)
+            systemctl start $PACKAGENAME \
+                || fail do_start "starting $PACKAGENAME"
+            ;;
+        *)
+            fail do_start "unsupported service type $svctype"
+            ;;
+    esac
+}
+
+## Tests
+
+is_symlink() {
+    [[ -h $1 ]]
+}
+
+is_running() {
+    pgrep -u hg-agent -f "$1"
+}
+
+test_postinstall() {
+    waiting postinstall 10
+
+    is_symlink "$SUPERVISORD" \
+        || fail postinstall "expected symlink $SUPERVISORD"
+
+    is_running "$SUPERVISORD" \
+        || fail postinstall "expected process for $SUPERVISORD"
+
+    is_running "$PERIODIC" \
+        || fail postinstall "expected process for $PERIODIC"
+
+    succeed postinstall
+}
+
+test_postboot() {
+    is_running "$SUPERVISORD" \
+        || fail postboot "expected process for $SUPERVISORD"
+
+    succeed postboot
+}
+
+test_poststop() {
+    waiting poststop 10
+
+    ! is_running "$SUPERVISORD" \
+        || fail poststop "unexpected process for $SUPERVISORD"
+
+    succeed poststop
+}
+
+test_poststart() {
+    waiting poststart 10
+
+    is_running "$SUPERVISORD" \
+        || fail poststart "expected process for $SUPERVISORD"
+
+    succeed poststart
+}
+
+test_postremove() {
+    waiting postremove 10
+
+    ! is_symlink "$SUPERVISORD" \
+        || fail postremove "unexpected symlink $SUPERVISORD"
+
+    ! is_running "$SUPERVISORD" \
+        || fail postremove "unexpected process for $SUPERVISORD"
+
+    ! is_running "$PERIODIC" \
+        || fail postremove "unexpected process for $PERIODIC"
+
+    succeed postremove
+}
+
+main() {
+    local usage="Usage: package_test {deb,rpm} {sysvinit,upstart,systemd} {install, boot, stop, start, remove}"
+
+    local pkgtype="${1:?$usage}"
+    local svctype="${2:?$usage}"
+    local testtype="${3:?$usage}"
+
+    case "$pkgtype" in
+        rpm)
+            true
+            ;;
+
+        deb)
+            true
+            ;;
+        *)
+            echo "$usage"
+            exit 1
+            ;;
+    esac
+
+    case "$svctype" in
+        sysvinit)
+            true
+            ;;
+
+        upstart)
+            true
+            ;;
+
+        systemd)
+            true
+            ;;
+        *)
+            echo "$usage"
+            exit 1
+            ;;
+    esac
+
+    case "$testtype" in
+        install)
+            do_install "$pkgtype" "$svctype"
+            test_postinstall
+            ;;
+        boot)
+            test_postboot
+            ;;
+        stop)
+            do_stop "$pkgtype" "$svctype"
+            test_poststop
+            ;;
+        start)
+            do_start "$pkgtype" "$svctype"
+            test_poststart
+            ;;
+        remove)
+            do_remove "$pkgtype" "$svctype"
+            test_postremove
+            ;;
+        *)
+            echo "$usage"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

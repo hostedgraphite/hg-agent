@@ -1,0 +1,11 @@
+#!/bin/sh
+/opt/hg-agent/bin/prerm
+if [ -x /etc/init.d/hg-agent ] ; then
+    service hg-agent stop
+    /usr/sbin/update-rc.d -f hg-agent remove
+elif [ -f /etc/init/hg-agent.conf ] ; then
+    service hg-agent stop
+else
+    systemctl stop hg-agent
+    systemctl disable hg-agent
+fi

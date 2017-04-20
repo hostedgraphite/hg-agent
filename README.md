@@ -1,2 +1,2 @@
 # hg-agent
-The Hosted Graphite agent
+The Hosted Graphite agent.
