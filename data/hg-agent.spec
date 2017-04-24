@@ -5,6 +5,7 @@ collectors = ['cpu',
               'loadavg',
               'memory',
               'network',
+              'sockstat',
               'vmstat']
 
 collector_path = '/hg-agent.venv/share/diamond/collectors/%s/%s.py'

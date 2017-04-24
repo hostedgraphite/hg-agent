@@ -1,5 +1,5 @@
 NAME=hg-agent
-VERSION=1.0
+VERSION=1.1
 ARCH=amd64
 
 docker:
@@ -85,10 +85,10 @@ package_test:
 	make -C targets/ubuntu-16.04
 
 deb-upload:
-	package_cloud push metricfire/$(NAME)/$(DISTRO) out/deb/$(INIT)/$(NAME)_$(VERSION)_$(ARCH).deb
+	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) out/deb/$(INIT)/$(NAME)_$(VERSION)_$(ARCH).deb
 
 rpm-upload:
-	package_cloud push metricfire/$(NAME)/$(DISTRO) out/rpm/$(INIT)/$(NAME)-$(VERSION).$(ARCH).rpm
+	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) out/rpm/$(INIT)/$(NAME)-$(VERSION).$(ARCH).rpm
 
 package-upload:
 	make deb-upload DISTRO=debian/wheezy  INIT=sysvinit

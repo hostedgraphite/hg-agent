@@ -44,7 +44,7 @@ for s in postinst prerm ; do
 done
 
 # Copies of the diamond collectors selected for distribution
-COLLECTORS="cpu diskspace diskusage files loadavg memory network vmstat"
+COLLECTORS="cpu diskspace diskusage files loadavg memory network sockstat vmstat"
 rm -Rf dist/collectors
 mkdir -p dist/collectors
 for c in ${COLLECTORS} ; do
