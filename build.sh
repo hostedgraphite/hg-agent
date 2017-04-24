@@ -23,7 +23,7 @@ pip install pyinstaller==3.1.1    \
             supervisor==3.3.1     \
             diamond==4.0.451      \
             psutil==5.1.3         \
-            'git+ssh://git@github.com/metricfire/hg-agent-periodic.git#egg=hg_agent_periodic'
+            'git+ssh://git@github.com/metricfire/hg-agent-periodic.git@cb6e2ca81fe685917ad6a5785058d3a896da9d06#egg=hg_agent_periodic'
 
 # Workaround a PyInstaller issue with namespaced packages, cf. goo.gl/CnuoMo
 touch /hg-agent.venv/lib/python2.7/site-packages/supervisor/__init__.py
