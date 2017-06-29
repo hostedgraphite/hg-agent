@@ -17,6 +17,7 @@ import supervisor.supervisorctl
 import sys
 import time
 
+from hg_agent_forwarder import recevier_main, forwarder_main
 from hg_agent_periodic import periodic, config, diamond_config
 
 
@@ -44,9 +45,18 @@ def run_supervisord():
     supervisor.supervisord.main()
 
 
+def run_forwarder():
+    forwarder_main.main()
+
+
+def run_receiver():
+    receiver_main.main()
+
 def main():
     switch = {'diamond': run_diamond,
               'periodic': run_periodic,
+              'forwarder': run_forwarder,
+              'receiver': run_receiver,
               'config': run_config,
               'diamond-config': run_diamond_config,
               'supervisorctl': run_supervisorctl,

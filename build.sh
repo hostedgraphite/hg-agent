@@ -24,7 +24,7 @@ pip install pyinstaller==3.1.1    \
             diamond==4.0.451      \
             psutil==5.1.3         \
             'git+ssh://git@github.com/hostedgraphite/hg-agent-periodic.git@96b389f882e8958929dea146c49b71aed0bbffac#egg=hg_agent_periodic'
-
+            'git+ssh://git@github.com/metricfire/hg-agent-forwarder.git@update/receiver-forwarder#egg=hg_agent_forwarder'
 # Workaround a PyInstaller issue with namespaced packages, cf. goo.gl/CnuoMo
 touch /hg-agent.venv/lib/python2.7/site-packages/supervisor/__init__.py
 
