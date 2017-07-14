@@ -32,7 +32,7 @@ touch /hg-agent.venv/lib/python2.7/site-packages/supervisor/__init__.py
 pyinstaller -y data/hg-agent.spec
 
 # Symlinks to the various binaries inside `hg-agent`
-BINARIES="diamond periodic config diamond-config supervisorctl supervisord"
+BINARIES="diamond periodic config diamond-config supervisorctl supervisord forwarder receiver"
 rm -Rf dist/bin
 mkdir -p dist/bin
 for b in ${BINARIES} ; do
