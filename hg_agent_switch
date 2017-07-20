@@ -64,12 +64,17 @@ def main():
               'supervisord': run_supervisord}
 
     name = os.path.basename(sys.argv[0])
+    if name not in switch.keys():
+        print ('Invoked with unrecognized command name `%s`.\n'
+               'Options are: %s') % (name, switch.keys())
+        sys.exit(1)
+
     try:
         setproctitle.setproctitle('hg-agent-%s' % name)
         switch[name]()
-    except KeyError:
-        print ('Invoked with unrecognized command name `%s`.\n'
-               'Options are: %s') % (name, switch.keys())
+    except Exception as e:
+        print ('Invoking command name %s resulted in the'
+               ' following exception: %s') % (name, e)
         sys.exit(1)
 
 
