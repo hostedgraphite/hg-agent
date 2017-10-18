@@ -23,8 +23,9 @@ pip install pyinstaller==3.1.1    \
             supervisor==3.3.1     \
             diamond==4.0.451      \
             psutil==5.1.3         \
-            multitail2==1.4.1            \
-            'git+ssh://git@github.com/hostedgraphite/hg-agent-periodic.git@9a0680847038267db7c92ab43b7afefd74f14494#egg=hg_agent_periodic'\
+            multitail2==1.4.1     \
+            pymongo==3.5.1       \
+            'git+ssh://git@github.com/hostedgraphite/hg-agent-periodic.git@620a2d22baf68bb0e1e58cdd8ec7e5cdb1c4498b#egg=hg_agent_periodic'\
             'git+ssh://git@github.com/hostedgraphite/hg-agent-forwarder.git@d7f97c84fa4b4c602e69a1cada8423f6e848d63f#egg=hg_agent_forwarder'
 # Workaround a PyInstaller issue with namespaced packages, cf. goo.gl/CnuoMo
 touch /hg-agent.venv/lib/python2.7/site-packages/supervisor/__init__.py
@@ -45,7 +46,7 @@ for s in postinst prerm ; do
 done
 
 # Copies of the diamond collectors selected for distribution
-COLLECTORS="cpu diskspace diskusage files loadavg memory network sockstat vmstat"
+COLLECTORS="cpu diskspace diskusage files loadavg memory network sockstat vmstat mongodb"
 rm -Rf dist/collectors
 mkdir -p dist/collectors
 for c in ${COLLECTORS} ; do

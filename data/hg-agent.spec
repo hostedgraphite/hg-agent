@@ -6,7 +6,8 @@ collectors = ['cpu',
               'memory',
               'network',
               'sockstat',
-              'vmstat']
+              'vmstat',
+              'mongodb']
 
 collector_path = '/hg-agent.venv/share/diamond/collectors/%s/%s.py'
 collector_srcs = [collector_path % (c, c) for c in collectors]
