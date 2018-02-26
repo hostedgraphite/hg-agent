@@ -1,5 +1,5 @@
 NAME=hg-agent
-VERSION=1.12
+VERSION=1.13
 ARCH=amd64
 
 docker:
@@ -21,7 +21,7 @@ package:
 deb:
 	make build-deb INIT=sysvinit  # Debian < Jessie
 	make build-deb INIT=upstart   # Ubuntu 1{2,4}.04
-	make build-deb INIT=systemd   # Ubuntu 16.04, Debian Jessie
+	make build-deb INIT=systemd   # Ubuntu 16.04, Debian >= Jessie
 
 build-deb:
 	mkdir -p out/deb/$(INIT)/
@@ -80,6 +80,7 @@ package_test:
 	make -C targets/centos7
 	make -C targets/debian-wheezy
 	make -C targets/debian-jessie
+	make -C targets/debian-stretch
 	make -C targets/ubuntu-12.04
 	make -C targets/ubuntu-14.04
 	make -C targets/ubuntu-16.04
@@ -93,6 +94,7 @@ rpm-upload:
 package-upload:
 	make deb-upload DISTRO=debian/wheezy  INIT=sysvinit
 	make deb-upload DISTRO=debian/jessie  INIT=systemd
+	make deb-upload DISTRO=debian/stretch INIT=systemd
 	make deb-upload DISTRO=ubuntu/precise INIT=upstart
 	make deb-upload DISTRO=ubuntu/trusty  INIT=upstart
 	make deb-upload DISTRO=ubuntu/xenial  INIT=systemd
