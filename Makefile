@@ -1,5 +1,5 @@
 NAME=hg-agent
-VERSION=1.14
+VERSION=1.15
 ARCH=amd64
 
 docker:
