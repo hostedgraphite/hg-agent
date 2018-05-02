@@ -84,6 +84,7 @@ package_test:
 	make -C targets/ubuntu-12.04
 	make -C targets/ubuntu-14.04
 	make -C targets/ubuntu-16.04
+	make -C targets/ubuntu-18.04
 
 deb-upload:
 	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) out/deb/$(INIT)/$(NAME)_$(VERSION)_$(ARCH).deb
@@ -98,6 +99,7 @@ package-upload:
 	make deb-upload DISTRO=ubuntu/precise INIT=upstart
 	make deb-upload DISTRO=ubuntu/trusty  INIT=upstart
 	make deb-upload DISTRO=ubuntu/xenial  INIT=systemd
+	make deb-upload DISTRO=ubuntu/bionic  INIT=systemd
 	make rpm-upload DISTRO=el/6 INIT=sysvinit
 	make rpm-upload DISTRO=el/7 INIT=systemd
 
