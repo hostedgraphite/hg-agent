@@ -4,22 +4,22 @@ jobs:
     machine:
       services:
         - docker
-
-    dependencies:
-      pre:
-        - gem install fpm
-        - sudo apt-get install rpm
+    environment:
+      CIRCLE_ARTIFACTS: /tmp/artifacts
 
     steps:
-      override:
-        - make build
-        - make deb
-        - make rpm
-    post:
-        - cp -R out ${CIRCLE_ARTIFACTS}
+        - run: gem install fpm
+        - run: sudo apt-get install rpm
+        - run: make build
+        - run: make deb
+        - run: make rpm
+        - run: cp -R out ${CIRCLE_ARTIFACTS}
+        - store_artifacts:
+          path: /tmp/artifacts
 
   upload_packages:
-    - make package-upload
+    steps:
+      - run: make package-upload
 
 workflows:
   version: 2
@@ -29,4 +29,4 @@ workflows:
       - upload_package:
           type: approval
           requires:
-            - test_and_build
+            - test_build
