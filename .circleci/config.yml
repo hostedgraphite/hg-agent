@@ -12,10 +12,22 @@ jobs:
         - run: gem install fpm
         - run: make build
         - run: make deb
-        - run: make rpm
         - run: cp -R out ${CIRCLE_ARTIFACTS}
         - store_artifacts:
             path: /tmp/artifacts
+
+  build_rpm_packages:
+    macos:
+      xcode: "9.0"
+    steps:
+      - checkout
+      - run: mkdir -p $CIRCLE_ARTIFACTS
+      - run: brew install rpm
+      - run: make build
+      - run: make rpm
+      - run: cp -R out ${CIRCLE_ARTIFACTS}
+      - store_artifacts:
+          path: /tmp/artifacts
 
   upload_packages:
     machine:
@@ -28,7 +40,9 @@ workflows:
   test_and_build:
     jobs:
       - test_build
+      - build_rpm_packages
       - upload_package:
           type: approval
           requires:
             - test_build
+            - build_rpm_packages
