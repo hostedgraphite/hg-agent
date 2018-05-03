@@ -1,11 +1,8 @@
 version: 2.0
 jobs:
   test_build:
-    docker:
-      - image: hostedgraphite/pythonbuild:2venv
 
-    environment:
-      CIRCLE_ARTIFACTS: /tmp/artifacts
+    CIRCLE_ARTIFACTS: /tmp/artifacts
 
     steps:
         - checkout
