@@ -3,13 +3,13 @@ jobs:
   test_build:
     docker:
       - image: hostedgraphite/pythonbuild:2venv
-      
+
     environment:
       CIRCLE_ARTIFACTS: /tmp/artifacts
 
     steps:
         - run: gem install fpm
-        - run: sudo apt-get install rpm
+        - run: sudo apt-get install -y rpm
         - run: make build
         - run: make deb
         - run: make rpm
