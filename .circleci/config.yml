@@ -1,6 +1,7 @@
 version: 2.0
 jobs:
   test_build:
+    machine: true
 
     CIRCLE_ARTIFACTS: /tmp/artifacts
 
