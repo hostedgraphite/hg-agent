@@ -1,0 +1,32 @@
+version: 2
+jobs:
+  test_and_build:
+    machine:
+      services:
+        - docker
+
+    dependencies:
+      pre:
+        - gem install fpm
+        - sudo apt-get install rpm
+
+    test:
+      override:
+        - make build
+        - make deb
+        - make rpm
+    post:
+        - cp -R out ${CIRCLE_ARTIFACTS}
+
+  upload_packages:
+    - make package-upload
+
+workflows:
+  version: 2
+  test_and_build:
+    jobs:
+      - test_and_build
+      - upload_package:
+          type: approval
+          requires:
+            - test_and_build
