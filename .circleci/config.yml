@@ -2,8 +2,8 @@ version: 2.0
 jobs:
   test_build:
     machine:
-      services:
-        - docker
+      enabled: true
+
     environment:
       CIRCLE_ARTIFACTS: /tmp/artifacts
 
