@@ -15,9 +15,11 @@ jobs:
         - run: make rpm
         - run: cp -R out ${CIRCLE_ARTIFACTS}
         - store_artifacts:
-          path: /tmp/artifacts
+            path: /tmp/artifacts
 
   upload_packages:
+    machine:
+      enabled: true
     steps:
       - run: make package-upload
 
