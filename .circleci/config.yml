@@ -17,12 +17,15 @@ jobs:
             path: /tmp/artifacts
 
   build_rpm_packages:
-    macos:
-      xcode: "9.0"
+    machine:
+      image: circleci/classic:latest
+    environment:
+      CIRCLE_ARTIFACTS: /tmp/artifacts
+
     steps:
       - checkout
       - run: mkdir -p $CIRCLE_ARTIFACTS
-      - run: brew install rpm
+      - run: sudo apt-get install -y rpm
       - run: make build
       - run: make rpm
       - run: cp -R out ${CIRCLE_ARTIFACTS}
