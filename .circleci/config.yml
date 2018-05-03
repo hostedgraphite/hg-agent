@@ -25,6 +25,8 @@ jobs:
     steps:
       - checkout
       - run: mkdir -p $CIRCLE_ARTIFACTS
+      - run: sudo apt-get clean
+      - run: sudo apt-get -f install
       - run: sudo apt-get install -y rpm
       - run: make build
       - run: make rpm
