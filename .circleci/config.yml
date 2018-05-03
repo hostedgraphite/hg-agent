@@ -2,14 +2,14 @@ version: 2.0
 jobs:
   test_build:
     machine:
-      image: circleci/classic:201708-01
-
-    CIRCLE_ARTIFACTS: /tmp/artifacts
+      image: circleci/classic:latest
+    environment:
+      CIRCLE_ARTIFACTS: /tmp/artifacts
 
     steps:
         - checkout
+        - run: mkdir -p $CIRCLE_ARTIFACTS
         - run: gem install fpm
-        - run: sudo apt-get install -y liblua5.2-0 librpm3 librpmbuild3 librpmio3 librpmsign1 rpm2cpio debugedit rpm-common rpm
         - run: make build
         - run: make deb
         - run: make rpm
