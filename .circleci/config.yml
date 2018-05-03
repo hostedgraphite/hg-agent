@@ -30,6 +30,7 @@ jobs:
       - run: sudo apt-get autoremove
       - run: sudo apt-get -f install
       - run: sudo apt-get install -y rpm
+      - run: gem install fpm
       - run: make build
       - run: make rpm
       - run: cp -R out ${CIRCLE_ARTIFACTS}
