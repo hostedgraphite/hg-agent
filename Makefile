@@ -87,10 +87,10 @@ package_test:
 	make -C targets/ubuntu-18.04
 
 deb-upload:
-	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) out/deb/$(INIT)/$(NAME)_$(VERSION)_$(ARCH).deb
+	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) /tmp/artifacts/out/deb/$(INIT)/$(NAME)_$(VERSION)_$(ARCH).deb
 
 rpm-upload:
-	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) out/rpm/$(INIT)/$(NAME)-$(VERSION).$(ARCH).rpm
+	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) /tmp/artifacts/out/rpm/$(INIT)/$(NAME)-$(VERSION).$(ARCH).rpm
 
 package-upload:
 	make deb-upload DISTRO=debian/wheezy  INIT=sysvinit

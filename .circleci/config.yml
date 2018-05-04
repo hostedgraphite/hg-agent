@@ -41,10 +41,8 @@ jobs:
     machine:
       enabled: true
     steps:
+      - checkout
       - run: make package-upload
-
-  hold:
-
 
 
 workflows:
