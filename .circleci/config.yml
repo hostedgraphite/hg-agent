@@ -43,14 +43,21 @@ jobs:
     steps:
       - run: make package-upload
 
+  hold:
+
+
+
 workflows:
   version: 2
   test_and_build:
     jobs:
       - test_build
       - build_rpm_packages
-      - upload_package:
+      - hold:
           type: approval
           requires:
             - test_build
             - build_rpm_packages
+      - upload_package:
+          requires:
+            - hold
