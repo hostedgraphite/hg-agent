@@ -51,11 +51,8 @@ workflows:
     jobs:
       - test_build
       - build_rpm_packages
-      - hold:
+      - upload_package:
           type: approval
           requires:
             - test_build
             - build_rpm_packages
-      - upload_package:
-          requires:
-            - hold
