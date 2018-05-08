@@ -52,6 +52,12 @@ workflows:
           type: approval
           requires:
             - build_rpm_packages
+          filters:
+            branches:
+              only: master
       - upload_packages:
           requires:
             - hold
+          filters:
+            branches:
+              only: master
