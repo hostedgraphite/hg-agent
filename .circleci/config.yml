@@ -40,12 +40,6 @@ jobs:
             - hg_agent_package-{{ .Environment.CIRCLE_WORKFLOW_ID }}
       - checkout
       - run: gem install package_cloud
-      - run:
-          name: Set registry URL
-          command: npm set registry https://packagecloud.io/hostedgraphite/hg-agent/
-      - run:
-          name: Authenticate with registry
-          command: echo "//packagecloud.io/hostedgraphite/hg-agent/:_authToken=$pcloud" > ~/.packagecloud
       - run: make package-upload
 
 
