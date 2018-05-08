@@ -1,20 +1,5 @@
 version: 2.0
 jobs:
-  test_build:
-    machine:
-      image: circleci/classic:latest
-    environment:
-      CIRCLE_ARTIFACTS: /tmp/artifacts
-
-    steps:
-        - checkout
-        - run: mkdir -p $CIRCLE_ARTIFACTS
-        - run: gem install fpm
-        - run: make build
-        - run: make deb
-        - run: cp -R out ${CIRCLE_ARTIFACTS}
-        - store_artifacts:
-            path: /tmp/artifacts
 
   build_rpm_packages:
     machine:
@@ -32,15 +17,27 @@ jobs:
       - run: sudo apt-get install -y rpm
       - run: gem install fpm
       - run: make build
+      - run: make deb
       - run: make rpm
       - run: cp -R out ${CIRCLE_ARTIFACTS}
       - store_artifacts:
           path: /tmp/artifacts
+      - save_cache:
+          paths:
+            - /tmp/artifacts/
+          key: hg_agent_package-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+
 
   upload_packages:
     machine:
-      enabled: true
+      image: circleci/classic:latest
+    environment:
+      CIRCLE_ARTIFACTS: /tmp/artifacts
+
     steps:
+      - restore_cache:
+          keys:
+            - hg_agent_package-{{ .Environment.CIRCLE_WORKFLOW_ID }}
       - checkout
       - run: gem install package_cloud
       - run:
@@ -56,12 +53,10 @@ workflows:
   version: 2
   test_and_build:
     jobs:
-      - test_build
       - build_rpm_packages
       - hold:
           type: approval
           requires:
-            - test_build
             - build_rpm_packages
       - upload_packages:
           requires:
