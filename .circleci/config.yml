@@ -42,7 +42,7 @@ jobs:
       enabled: true
     steps:
       - checkout
-      - gem install package_cloud
+      - run: gem install package_cloud
       - run:
           name: Set registry URL
           command: npm set registry https://packagecloud.io/hostedgraphite/hg-agent/
