@@ -62,6 +62,6 @@ workflows:
           requires:
             - test_build
             - build_rpm_packages
-      - upload_package:
+      - upload_packages:
           requires:
             - hold
