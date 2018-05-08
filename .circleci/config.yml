@@ -40,6 +40,9 @@ jobs:
   upload_packages:
     machine:
       enabled: true
+    dependencies:
+      pre:
+        - gem install package_cloud
     steps:
       - checkout
       - run:
