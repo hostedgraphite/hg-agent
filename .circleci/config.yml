@@ -1,7 +1,7 @@
 version: 2.0
 jobs:
 
-  build_rpm_packages:
+  build_packages:
     machine:
       image: circleci/classic:latest
     environment:
@@ -42,16 +42,15 @@ jobs:
       - run: gem install package_cloud
       - run: make package-upload
 
-
 workflows:
   version: 2
   test_and_build:
     jobs:
-      - build_rpm_packages
+      - build_packages
       - hold:
           type: approval
           requires:
-            - build_rpm_packages
+            - build_packages
           filters:
             branches:
               only: master
