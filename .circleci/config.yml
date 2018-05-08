@@ -48,7 +48,7 @@ jobs:
           command: npm set registry https://packagecloud.io/hostedgraphite/hg-agent/
       - run:
           name: Authenticate with registry
-          command: echo "//packagecloud.io/hostedgraphite/hg-agent/:_authToken=$pcloud" > ~/.npmrc
+          command: echo "//packagecloud.io/hostedgraphite/hg-agent/:_authToken=$pcloud" > ~/.packagecloud
       - run: make package-upload
 
 
