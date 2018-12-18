@@ -21,7 +21,7 @@ package:
 deb:
 	make build-deb INIT=sysvinit  # Debian < Jessie
 	make build-deb INIT=upstart   # Ubuntu 1{2,4}.04
-	make build-deb INIT=systemd   # Ubuntu 16.04, Debian >= Jessie
+	make build-deb INIT=systemd   # Ubuntu > 16.04, Debian >= Jessie
 
 build-deb:
 	mkdir -p out/deb/$(INIT)/
@@ -85,6 +85,7 @@ package_test:
 	make -C targets/ubuntu-14.04
 	make -C targets/ubuntu-16.04
 	make -C targets/ubuntu-18.04
+	make -C targets/ubuntu-18.10
 
 deb-upload:
 	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) /tmp/artifacts/out/deb/$(INIT)/$(NAME)_$(VERSION)_$(ARCH).deb
@@ -100,6 +101,7 @@ package-upload:
 	make deb-upload DISTRO=ubuntu/trusty  INIT=upstart
 	make deb-upload DISTRO=ubuntu/xenial  INIT=systemd
 	make deb-upload DISTRO=ubuntu/bionic  INIT=systemd
+	make deb-upload DISTRO=ubuntu/cosmic  INIT=systemd
 	make rpm-upload DISTRO=el/6 INIT=sysvinit
 	make rpm-upload DISTRO=el/7 INIT=systemd
 
