@@ -25,7 +25,7 @@ pip install pyinstaller==3.1.1    \
             psutil==5.1.3         \
             multitail2==1.4.1     \
             pymongo==3.5.1       \
-            'git+ssh://git@github.com/hostedgraphite/hg-agent-periodic.git@fb2ec635152839d72170d11d3d07c46370132702#egg=hg_agent_periodic'\
+            'git+ssh://git@github.com/hostedgraphite/hg-agent-periodic.git@3e9daf97797a751fe7d975e638c86d0f94aa2267#egg=hg_agent_periodic'\
             'git+ssh://git@github.com/hostedgraphite/hg-agent-forwarder.git@21dbc1a2528d4431a4a9a2c755513f4129b68c14#egg=hg_agent_forwarder'
 # Workaround a PyInstaller issue with namespaced packages, cf. goo.gl/CnuoMo
 touch /hg-agent.venv/lib/python2.7/site-packages/supervisor/__init__.py
