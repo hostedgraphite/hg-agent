@@ -1,5 +1,5 @@
 NAME=hg-agent
-VERSION=1.18
+VERSION=1.19
 ARCH=amd64
 
 docker:
@@ -86,6 +86,7 @@ package_test:
 	make -C targets/ubuntu-16.04
 	make -C targets/ubuntu-18.04
 	make -C targets/ubuntu-18.10
+	make -C targets/ubuntu-20.04
 
 deb-upload:
 	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) /tmp/artifacts/out/deb/$(INIT)/$(NAME)_$(VERSION)_$(ARCH).deb
@@ -102,6 +103,7 @@ package-upload:
 	make deb-upload DISTRO=ubuntu/xenial  INIT=systemd
 	make deb-upload DISTRO=ubuntu/bionic  INIT=systemd
 	make deb-upload DISTRO=ubuntu/cosmic  INIT=systemd
+	make deb-upload DISTRO=ubuntu/focal   INIT=systemd
 	make rpm-upload DISTRO=el/6 INIT=sysvinit
 	make rpm-upload DISTRO=el/7 INIT=systemd
 
