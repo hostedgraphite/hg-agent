@@ -19,9 +19,9 @@ package:
 	make rpm
 
 deb:
-	make build-deb INIT=sysvinit  # Debian < Jessie
 	make build-deb INIT=upstart   # Ubuntu 1{2,4}.04
 	make build-deb INIT=systemd   # Ubuntu > 16.04, Debian >= Jessie
+	make build-deb INIT=sysvinit  # Debian < Jessie
 
 build-deb:
 	mkdir -p out/deb/$(INIT)/
