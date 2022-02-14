@@ -9,7 +9,7 @@ docker:
 	@echo "(and the right credentials!)"
 
 build:
-	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)
+	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build -e SSH_PRIVATE_KEY_GITHUB=$(SSH_PRIVATE_KEY_GITHUB) bash /hg-agent/build.sh $(VERSION)
 
 buildlocal:
 	docker run -v $(SSH_AUTH_SOCK):/ssh-agent --env SSH_AUTH_SOCK=/ssh-agent -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)

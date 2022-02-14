@@ -10,6 +10,7 @@ VERSION=$1
 
 cp -r /root/ssh_copy /root/.ssh
 chown -R root /root/.ssh
+echo "${SSH_PRIVATE_KEY_GITHUB}" > /root/.ssh/id_rsa
 
 # Use the container's user for this
 sed -i 's/ubuntu/root/' /root/.ssh/config
