@@ -20,7 +20,7 @@ sed -i 's/ubuntu/root/' /root/.ssh/config
 sed -i 's/\/home//' /root/.ssh/config
 
 cd /hg-agent
-virtualenv --python=~/usr/bin/python3.8 /hg-agent.venv
+virtualenv --python=/usr/bin/python3.8 /hg-agent.venv
 source /hg-agent.venv/bin/activate
 pip install pyinstaller==3.6    \
             setproctitle==1.1.10  \

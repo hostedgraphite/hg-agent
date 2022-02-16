@@ -10,6 +10,8 @@ RUN yum -y update && \
     yum groupinstall -y development && \
     yum install -y zlib-dev openssl-devel sqlite-devel bzip2-devel wget
 
+RUN \cp -r hg=agent/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+
 # Build & install a modern Python
 RUN wget https://www.python.org/ftp/python/3.8.8/Python-3.8.8.tar.xz && \
     tar -xJf Python-3.8.8.tar.xz && \
@@ -18,7 +20,7 @@ RUN wget https://www.python.org/ftp/python/3.8.8/Python-3.8.8.tar.xz && \
     make && \
     make altinstall
 
-ln -sfn /usr/local/bin/python3.8 /usr/bin/python3.8
+RUN ln -sfn /usr/local/bin/python3.8 /usr/bin/python3.8
 
 # Add /usr/local/lib to ld.so's path.
 RUN cp /data/usrlocal.conf /etc/ld.so.conf.d && \
