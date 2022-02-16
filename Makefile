@@ -13,6 +13,9 @@ docker:
 build:
 	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)
 
+buildtest:
+	docker run -it -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build bash
+
 buildlocal:
 	docker run -v $(SSH_AUTH_SOCK):/ssh-agent --env SSH_AUTH_SOCK=/ssh-agent -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)
 

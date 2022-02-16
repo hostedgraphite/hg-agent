@@ -18,6 +18,8 @@ RUN wget https://www.python.org/ftp/python/3.8.8/Python-3.8.8.tar.xz && \
     make && \
     make altinstall
 
+ln -sfn /usr/local/bin/python3.8 /usr/bin/python3.8
+
 # Add /usr/local/lib to ld.so's path.
 RUN cp /data/usrlocal.conf /etc/ld.so.conf.d && \
     ldconfig -v
