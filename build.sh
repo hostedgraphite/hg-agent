@@ -19,7 +19,7 @@ cd /hg-agent
 virtualenv /hg-agent.venv
 source /hg-agent.venv/bin/activate
 pip install pyinstaller==3.6    \
-            setproctitle==1.2.2  \
+            setproctitle==1.1.10  \
             supervisor==4.2.4     \
             psutil==5.9.0         \
             multitail2==1.5.2     \
