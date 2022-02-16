@@ -11,9 +11,9 @@ RUN yum -y update && \
     yum install -y zlib-dev openssl-devel sqlite-devel bzip2-devel wget
 
 # Build & install a modern Python
-RUN wget http://www.python.org/ftp/python/2.7.12/Python-2.7.12.tar.xz && \
-    tar -xJf Python-2.7.12.tar.xz && \
-    cd Python-2.7.12 && \
+RUN wget https://www.python.org/ftp/python/3.8.8/Python-3.8.8.tar.xz && \
+    tar -xJf Python-3.8.8.tar.xz && \
+    cd Python-3.8.8 && \
     ./configure --prefix=/usr/local --enable-shared && \
     make && \
     make altinstall
@@ -23,8 +23,8 @@ RUN cp /data/usrlocal.conf /etc/ld.so.conf.d && \
     ldconfig -v
 
 # Get pip & virtualenv up and running.
-RUN wget https://bootstrap.pypa.io/ez_setup.py -O - | /usr/local/bin/python2.7 && \
-    wget https://bootstrap.pypa.io/get-pip.py -O - | /usr/local/bin/python2.7 && \
+RUN wget https://bootstrap.pypa.io/ez_setup.py -O - | /usr/local/bin/python3 && \
+    wget https://bootstrap.pypa.io/get-pip.py -O - | /usr/local/bin/python3 && \
     /usr/local/bin/pip install virtualenv
 
 # Install the UPX executable packer.

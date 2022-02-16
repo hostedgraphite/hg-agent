@@ -1,5 +1,5 @@
 NAME=hg-agent
-VERSION=1.18
+VERSION=2.0
 ARCH=amd64
 
 docker:
@@ -78,6 +78,7 @@ shell_lint:
 package_test:
 	make -C targets/centos6
 	make -C targets/centos7
+	make -C targets/centos8
 	make -C targets/debian-wheezy
 	make -C targets/debian-jessie
 	make -C targets/debian-stretch
@@ -86,6 +87,9 @@ package_test:
 	make -C targets/ubuntu-16.04
 	make -C targets/ubuntu-18.04
 	make -C targets/ubuntu-18.10
+	make -C targets/ubuntu-19.04
+	make -C targets/ubuntu-19.10
+	make -C targets/ubuntu-20.04
 
 deb-upload:
 	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) /tmp/artifacts/out/deb/$(INIT)/$(NAME)_$(VERSION)_$(ARCH).deb
@@ -102,7 +106,11 @@ package-upload:
 	make deb-upload DISTRO=ubuntu/xenial  INIT=systemd
 	make deb-upload DISTRO=ubuntu/bionic  INIT=systemd
 	make deb-upload DISTRO=ubuntu/cosmic  INIT=systemd
+	make deb-upload DISTRO=ubuntu/disco   INIT=systemd
+	make deb-upload DISTRO=ubuntu/eoan    INIT=systemd
+	make deb-upload DISTRO=ubuntu/focal   INIT=systemd
 	make rpm-upload DISTRO=el/6 INIT=sysvinit
 	make rpm-upload DISTRO=el/7 INIT=systemd
+	make rpm-upload DISTRO=el/8 INIT=systemd
 
 .PHONY: docker build package deb build-deb rpm build-rpm shell_lint package_test deb-upload rpm-upload package-upload

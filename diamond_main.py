@@ -111,7 +111,7 @@ def main():
         gid = -1
 
         if options.version:
-            print "Diamond version %s" % (get_diamond_version())
+            print("Diamond version %s" % (get_diamond_version()))
             sys.exit(0)
 
         # Initialize Config
@@ -119,8 +119,7 @@ def main():
         if os.path.exists(options.configfile):
             config = configobj.ConfigObj(options.configfile)
         else:
-            print >> sys.stderr, "ERROR: Config file: %s does not exist." % (
-                options.configfile)
+            sys.stderr.write(f"ERROR: Config file: {options.configfile} does not exist.")
             parser.print_help(sys.stderr)
             sys.exit(1)
 
@@ -128,10 +127,10 @@ def main():
         log = setup_logging(options.configfile, options.log_stdout)
 
     # Pass the exit up stream rather then handle it as an general exception
-    except SystemExit, e:
+    except SystemExit as e:
         raise SystemExit
 
-    except Exception, e:
+    except Exception as e:
         import traceback
         sys.stderr.write("Unhandled exception: %s" % str(e))
         sys.stderr.write("traceback: %s" % traceback.format_exc())
@@ -147,7 +146,7 @@ def main():
 
             # Read existing pid file
             try:
-                pf = file(options.pidfile, 'r')
+                pf = open(options.pidfile, 'r')
                 pid = int(pf.read().strip())
                 pf.close()
             except (IOError, ValueError):
@@ -160,11 +159,9 @@ def main():
                     # Pid is not real
                     os.unlink(options.pidfile)
                     pid = None
-                    print >> sys.stderr, (
-                        "WARN: Bogus pid file was found. I deleted it.")
+                    sys.stderr.write("WARN: Bogus pid file was found. I deleted it.")
                 else:
-                    print >> sys.stderr, (
-                        "ERROR: Pidfile exists. Server already running?")
+                    sys.stderr.write("ERROR: Pidfile exists. Server already running?")
                     sys.exit(1)
 
             # Get final GIDs
@@ -186,9 +183,9 @@ def main():
                 # Write pid file
                 pid = str(os.getpid())
                 try:
-                    pf = file(options.pidfile, 'w+')
-                except IOError, e:
-                    print >> sys.stderr, "Failed to write PID file: %s" % (e)
+                    pf = open(options.pidfile, 'w+')
+                except IOError as e:
+                    sys.stderr.write(f"Failed to write PID file: {e}")
                     sys.exit(1)
                 pf.write("%s\n" % pid)
                 pf.close()
@@ -212,8 +209,8 @@ def main():
                     # Set UID
                     os.setuid(uid)
 
-            except Exception, e:
-                print >> sys.stderr, "ERROR: Failed to set UID/GID. %s" % (e)
+            except Exception as e:
+                sys.stderr.write(f"ERROR: Failed to set UID/GID. {e}")
                 sys.exit(1)
 
             # Log
@@ -237,8 +234,8 @@ def main():
                     if pid > 0:
                         # Exit first paren
                         sys.exit(0)
-                except OSError, e:
-                    print >> sys.stderr, "Failed to fork process." % (e)
+                except OSError as e:
+                    sys.stderr.write(f"Failed to fork process. {e}")
                     sys.exit(1)
                 # Decouple from parent environmen
                 os.setsid()
@@ -249,8 +246,8 @@ def main():
                     if pid > 0:
                         # Exit second paren
                         sys.exit(0)
-                except OSError, e:
-                    print >> sys.stderr, "Failed to fork process." % (e)
+                except OSError as e:
+                    sys.stderr.write(f"Failed to fork process. {e}")
                     sys.exit(1)
                 # Close file descriptors so that we can detach
                 sys.stdout.close()
@@ -269,8 +266,8 @@ def main():
                 # Write pid file
                 pid = str(os.getpid())
                 try:
-                    pf = file(options.pidfile, 'w+')
-                except IOError, e:
+                    pf = open(options.pidfile, 'w+')
+                except IOError as e:
                     log.error("Failed to write child PID file: %s" % (e))
                     sys.exit(1)
                 pf.write("%s\n" % pid)
@@ -299,14 +296,15 @@ def main():
         server.run()
 
     # Pass the exit up stream rather then handle it as an general exception
-    except SystemExit, e:
+    except SystemExit as e:
         raise SystemExit
 
-    except Exception, e:
+    except Exception as e:
         import traceback
         log.error("Unhandled exception: %s" % str(e))
         log.error("traceback: %s" % traceback.format_exc())
         sys.exit(1)
+
 
 if __name__ == "__main__":
     if setproctitle:

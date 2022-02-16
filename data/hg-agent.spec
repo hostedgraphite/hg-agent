@@ -22,10 +22,10 @@ a = Analysis(analysis_paths,
              binaries=None,
              datas=[
                  # supervisor expects to find its version.txt, so we have to copy explicitly.
-                 ('/hg-agent.venv/lib/python2.7/site-packages/supervisor/version.txt', 'supervisor'),
+                 ('/hg-agent.venv/lib/python3/site-packages/supervisor/version.txt', 'supervisor'),
 
                  # the jinja2 template for hg-agent-periodic
-                 ('/hg-agent.venv/lib/python2.7/site-packages/hg_agent_periodic/templates', 'hg_agent_periodic/templates')
+                 ('/hg-agent.venv/lib/python3/site-packages/hg_agent_periodic/templates', 'hg_agent_periodic/templates')
              ],
              hiddenimports=['diamond.handler.archive',
                             'diamond.handler.hostedgraphite',

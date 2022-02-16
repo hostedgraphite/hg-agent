@@ -23,11 +23,13 @@ def get_usage_for_username(username):
             if process.username() == username:
                 cpu_times.append(process.cpu_times())
                 memory_info.append(process.memory_info())
-    return {'user': sum([c.user for c in cpu_times]),
-            'system': sum([c.system for c in cpu_times]),
-            'res': sum([m.rss for m in memory_info]),
-            'virt': sum([m.vms for m in memory_info]),
-            'shr': sum([m.shared for m in memory_info])}
+    return {
+        'user': sum([c.user for c in cpu_times]),
+        'system': sum([c.system for c in cpu_times]),
+        'res': sum([m.rss for m in memory_info]),
+        'virt': sum([m.vms for m in memory_info]),
+        'shr': sum([m.shared for m in memory_info])
+    }
 
 
 class SelfCollector(diamond.collector.Collector):
@@ -41,7 +43,6 @@ class SelfCollector(diamond.collector.Collector):
             'path': 'self'
         })
         return config
-
 
     def collect(self):
         '''
