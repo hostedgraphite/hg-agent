@@ -8,11 +8,13 @@ docker:
 	@echo "docker push hostedgraphite/hg-agent-build"
 	@echo "(and the right credentials!)"
 
+
+# SSH_PRIVATE_KEY_GITHUB was added to the CI environment variables as encoded base64 string
 build:
-	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)
+	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)
 
 buildlocal:
-	docker run -v $(SSH_AUTH_SOCK):/ssh-agent --env SSH_AUTH_SOCK=/ssh-agent -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)
+	docker run -v $(SSH_AUTH_SOCK):/ssh-agent --env SSH_AUTH_SOCK=/ssh-agent -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)
 
 package:
 	make deb

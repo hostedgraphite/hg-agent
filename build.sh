@@ -11,6 +11,10 @@ VERSION=$1
 cp -r /root/ssh_copy /root/.ssh
 chown -R root /root/.ssh
 
+# SSH_PRIVATE_KEY_GITHUB was added manually to the CI environment variables as encoded base64 string
+# It is a fix for installing hg-agent-periodic, hg-agent-forwarder packages. (Permission denied issue)
+echo $SSH_PRIVATE_KEY_GITHUB | base64 --decode > /root/.ssh/id_rsa
+
 # Use the container's user for this
 sed -i 's/ubuntu/root/' /root/.ssh/config
 sed -i 's/\/home//' /root/.ssh/config
@@ -24,8 +28,8 @@ pip install pyinstaller==3.6    \
             psutil==5.9.0         \
             multitail2==1.5.2     \
             pymongo==3.12.3       \
-            'git+ssh://git@github.com/hostedgraphite/Diamond.git@v5.0.0#egg=diamond'\
             'git+ssh://git@github.com/hostedgraphite/hg-agent-periodic.git@v2.0.0#egg=hg_agent_periodic'\
+            'git+ssh://git@github.com/hostedgraphite/Diamond.git@v5.0.0#egg=diamond'\
             'git+ssh://git@github.com/hostedgraphite/hg-agent-forwarder.git@v2.0.0#egg=hg_agent_forwarder'
 # Workaround a PyInstaller issue with namespaced packages, cf. goo.gl/CnuoMo
 touch /hg-agent.venv/lib/python3/site-packages/supervisor/__init__.py
