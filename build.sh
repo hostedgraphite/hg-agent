@@ -18,8 +18,8 @@ pip install pyinstaller==3.6    \
             setproctitle==1.1.10  \
             supervisor==4.2.4     \
             psutil==5.9.0         \
-            multitail2==1.5.2     \
             pymongo==3.12.3       \
+            'git+ssh://git@github.com/metricfire/python-multitail2.git@v2.0.0#egg=multitail2'\
             'git+ssh://git@github.com/hostedgraphite/hg-agent-periodic.git@v2.0.0#egg=hg_agent_periodic'\
             'git+ssh://git@github.com/hostedgraphite/Diamond.git@v5.0.0#egg=diamond'\
             'git+ssh://git@github.com/hostedgraphite/hg-agent-forwarder.git@v2.0.0#egg=hg_agent_forwarder'
