@@ -20,7 +20,7 @@ sed -i 's/ubuntu/root/' /root/.ssh/config
 sed -i 's/\/home//' /root/.ssh/config
 
 cd /hg-agent
-virtualenv --python=/usr/bin/python3.8 /hg-agent.venv
+virtualenv --python=/usr/bin/python3 /hg-agent.venv
 source /hg-agent.venv/bin/activate
 pip install pyinstaller==3.6    \
             setproctitle==1.1.10  \
@@ -32,7 +32,7 @@ pip install pyinstaller==3.6    \
             'git+ssh://git@github.com/hostedgraphite/Diamond.git@v5.0.0#egg=diamond'\
             'git+ssh://git@github.com/hostedgraphite/hg-agent-forwarder.git@v2.0.0#egg=hg_agent_forwarder'
 # Workaround a PyInstaller issue with namespaced packages, cf. goo.gl/CnuoMo
-touch /hg-agent.venv/lib/python3.8/site-packages/supervisor/__init__.py
+touch /hg-agent.venv/lib/python3/site-packages/supervisor/__init__.py
 
 pyinstaller -y data/hg-agent.spec
 
