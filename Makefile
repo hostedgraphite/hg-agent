@@ -3,21 +3,27 @@ VERSION=2.0
 ARCH=amd64
 
 docker:
-	docker build -t hostedgraphite/hg-agent-build .
+	docker build -t hostedgraphite/hg-agent-build3 .
 	@echo "You can upload the image with:"
 	@echo "docker push hostedgraphite/hg-agent-build"
 	@echo "(and the right credentials!)"
 
+docker-7:
+	docker build -f Dockerfile.CentOS7 -t hostedgraphite/hg-agent-build-os7-py3 .
+
+docker-8:
+	docker build -f Dockerfile.CentOS8 -t hostedgraphite/hg-agent-build-os8-py3 .
+
 
 # SSH_PRIVATE_KEY_GITHUB was added to the CI environment variables as encoded base64 string
 build:
-	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)
+	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build-os7-py3 bash /hg-agent/build.sh $(VERSION)
 
 buildtest:
-	docker run -it -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build bash
+	docker run -it -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build-os7-py3 bash
 
 buildlocal:
-	docker run -v $(SSH_AUTH_SOCK):/ssh-agent --env SSH_AUTH_SOCK=/ssh-agent -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)
+	docker run -v $(SSH_AUTH_SOCK):/ssh-agent --env SSH_AUTH_SOCK=/ssh-agent -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build-os7-py3 bash /hg-agent/build.sh $(VERSION)
 
 package:
 	make deb
