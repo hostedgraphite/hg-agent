@@ -6,19 +6,19 @@ MAINTAINER docker@hostedgraphite.com
 
 ADD data /data/
 
+# Fix for yum
+RUN \cp -r hg-agent/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+
 RUN yum -y update && \
     yum groupinstall -y development && \
-    yum install -y zlib-dev openssl-devel sqlite-devel bzip2-devel wget
-
-RUN \cp -r hg=agent/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+    yum install -y gcc gcc-c++ zlib-dev openssl-devel sqlite-devel bzip2-devel libffi-devel zlib zlib-devel libssl-dev wget
 
 # Build & install a modern Python
-RUN wget https://www.python.org/ftp/python/3.8.8/Python-3.8.8.tar.xz && \
-    tar -xJf Python-3.8.8.tar.xz && \
+RUN cd /opt && wget https://www.python.org/ftp/python/3.8.8/Python-3.8.8.tgz && \
+    tar xzf Python-3.8.8.tgz && \
     cd Python-3.8.8 && \
-    ./configure --prefix=/usr/local --enable-shared && \
-    make && \
-    make altinstall
+    ./configure --enable-optimizations && \
+    make altinstall && rm Python-3.8.8.tgz
 
 RUN ln -sfn /usr/local/bin/python3.8 /usr/bin/python3.8
 
