@@ -11,10 +11,6 @@ docker:
 docker-7:
 	docker build -f Dockerfile.CentOS7 -t hostedgraphite/hg-agent-build-os7-py3 .
 
-docker-8:
-	docker build -f Dockerfile.CentOS8 -t hostedgraphite/hg-agent-build-os8-py3 .
-
-
 # SSH_PRIVATE_KEY_GITHUB was added to the CI environment variables as encoded base64 string
 build:
 	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build-os7-py3 bash /hg-agent/build.sh $(VERSION)
