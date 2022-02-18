@@ -85,10 +85,10 @@ shell_lint:
 package_test:
 	make -C targets/centos7
 	make -C targets/centos8
-	make -C targets/debian-wheezy
 	make -C targets/debian-jessie
 	make -C targets/debian-stretch
 	make -C targets/debian-buster
+	make -C targets/debian-bullseye
 	make -C targets/ubuntu-14.04
 	make -C targets/ubuntu-16.04
 	make -C targets/ubuntu-18.04
@@ -104,7 +104,6 @@ rpm-upload:
 	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) /tmp/artifacts/out/rpm/$(INIT)/$(NAME)-$(VERSION).$(ARCH).rpm
 
 package-upload:
-	make deb-upload DISTRO=debian/wheezy   INIT=sysvinit
 	make deb-upload DISTRO=debian/jessie   INIT=systemd
 	make deb-upload DISTRO=debian/stretch  INIT=systemd
 	make deb-upload DISTRO=debian/buster   INIT=systemd
