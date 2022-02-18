@@ -104,17 +104,18 @@ rpm-upload:
 	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) /tmp/artifacts/out/rpm/$(INIT)/$(NAME)-$(VERSION).$(ARCH).rpm
 
 package-upload:
-	make deb-upload DISTRO=debian/wheezy  INIT=sysvinit
-	make deb-upload DISTRO=debian/jessie  INIT=systemd
-	make deb-upload DISTRO=debian/stretch INIT=systemd
-	make deb-upload DISTRO=debian/buster  INIT=systemd
-	make deb-upload DISTRO=ubuntu/trusty  INIT=upstart
-	make deb-upload DISTRO=ubuntu/xenial  INIT=systemd
-	make deb-upload DISTRO=ubuntu/bionic  INIT=systemd
-	make deb-upload DISTRO=ubuntu/cosmic  INIT=systemd
-	make deb-upload DISTRO=ubuntu/disco   INIT=systemd
-	make deb-upload DISTRO=ubuntu/eoan    INIT=systemd
-	make deb-upload DISTRO=ubuntu/focal   INIT=systemd
+	make deb-upload DISTRO=debian/wheezy   INIT=sysvinit
+	make deb-upload DISTRO=debian/jessie   INIT=systemd
+	make deb-upload DISTRO=debian/stretch  INIT=systemd
+	make deb-upload DISTRO=debian/buster   INIT=systemd
+	make deb-upload DISTRO=debian/bullseye INIT=systemd
+	make deb-upload DISTRO=ubuntu/trusty   INIT=upstart
+	make deb-upload DISTRO=ubuntu/xenial   INIT=systemd
+	make deb-upload DISTRO=ubuntu/bionic   INIT=systemd
+	make deb-upload DISTRO=ubuntu/cosmic   INIT=systemd
+	make deb-upload DISTRO=ubuntu/disco    INIT=systemd
+	make deb-upload DISTRO=ubuntu/eoan     INIT=systemd
+	make deb-upload DISTRO=ubuntu/focal    INIT=systemd
 	make rpm-upload DISTRO=el/7 INIT=systemd
 	make rpm-upload DISTRO=el/8 INIT=systemd
 
