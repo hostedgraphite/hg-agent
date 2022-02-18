@@ -83,13 +83,12 @@ shell_lint:
 	docker run -v $(PWD):/hg-agent koalaman/shellcheck /hg-agent/package_test
 
 package_test:
-	make -C targets/centos6
 	make -C targets/centos7
 	make -C targets/centos8
 	make -C targets/debian-wheezy
 	make -C targets/debian-jessie
 	make -C targets/debian-stretch
-	make -C targets/ubuntu-12.04
+	make -C targets/debian-buster
 	make -C targets/ubuntu-14.04
 	make -C targets/ubuntu-16.04
 	make -C targets/ubuntu-18.04
@@ -108,7 +107,7 @@ package-upload:
 	make deb-upload DISTRO=debian/wheezy  INIT=sysvinit
 	make deb-upload DISTRO=debian/jessie  INIT=systemd
 	make deb-upload DISTRO=debian/stretch INIT=systemd
-	make deb-upload DISTRO=ubuntu/precise INIT=upstart
+	make deb-upload DISTRO=debian/buster  INIT=systemd
 	make deb-upload DISTRO=ubuntu/trusty  INIT=upstart
 	make deb-upload DISTRO=ubuntu/xenial  INIT=systemd
 	make deb-upload DISTRO=ubuntu/bionic  INIT=systemd
@@ -116,7 +115,6 @@ package-upload:
 	make deb-upload DISTRO=ubuntu/disco   INIT=systemd
 	make deb-upload DISTRO=ubuntu/eoan    INIT=systemd
 	make deb-upload DISTRO=ubuntu/focal   INIT=systemd
-	make rpm-upload DISTRO=el/6 INIT=sysvinit
 	make rpm-upload DISTRO=el/7 INIT=systemd
 	make rpm-upload DISTRO=el/8 INIT=systemd
 
