@@ -3,31 +3,26 @@ VERSION=2.0
 ARCH=amd64
 
 docker:
-	docker build -t hostedgraphite/hg-agent-build3 .
+	docker build -t hostedgraphite/hg-agent-build-os7-py3 .
 	@echo "You can upload the image with:"
 	@echo "docker push hostedgraphite/hg-agent-build"
 	@echo "(and the right credentials!)"
 
-docker-7:
-	docker build -f Dockerfile.CentOS7 -t hostedgraphite/hg-agent-build-os7-py3 .
-
-# SSH_PRIVATE_KEY_GITHUB was added to the CI environment variables as encoded base64 string
 build:
-	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build-os7-py3 bash /hg-agent/build.sh $(VERSION)
+	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build-os7-py3 bash /hg-agent/build.sh $(VERSION)
 
 buildtest:
-	docker run -it -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build-os7-py3 bash
+	docker run -it -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build-os7-py3 bash
 
 buildlocal:
-	docker run -v $(SSH_AUTH_SOCK):/ssh-agent --env SSH_AUTH_SOCK=/ssh-agent -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent -e SSH_PRIVATE_KEY_GITHUB="$(SSH_PRIVATE_KEY_GITHUB)" hostedgraphite/hg-agent-build-os7-py3 bash /hg-agent/build.sh $(VERSION)
+	docker run -v $(SSH_AUTH_SOCK):/ssh-agent --env SSH_AUTH_SOCK=/ssh-agent -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build-os7-py3 bash /hg-agent/build.sh $(VERSION)
 
 package:
 	make deb
 	make rpm
 
 deb:
-	make build-deb INIT=sysvinit  # Debian < Jessie
-	make build-deb INIT=upstart   # Ubuntu 1{2,4}.04
+	make build-deb INIT=upstart   # Ubuntu 14.04
 	make build-deb INIT=systemd   # Ubuntu > 16.04, Debian >= Jessie
 
 build-deb:
@@ -53,8 +48,7 @@ build-deb:
  		$(INIT)/root/=/
 
 rpm:
-	make build-rpm INIT=sysvinit # RHEL family 6
-	make build-rpm INIT=systemd  # RHEL family 7
+	make build-rpm INIT=systemd  # RHEL family >7
 
 build-rpm:
 	mkdir -p out/rpm/$(INIT)/
