@@ -27,7 +27,6 @@ jobs:
             - /tmp/artifacts/
           key: hg_agent_package-{{ .Environment.CIRCLE_WORKFLOW_ID }}
 
-
   upload_packages:
     machine:
       image: circleci/classic:latest
