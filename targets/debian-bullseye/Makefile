@@ -1,7 +1,7 @@
 include ../test.mk
 
 PKG=deb
-INIT=sysvinit
+INIT=systemd
 test:
 	make target_test
 
