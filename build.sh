@@ -14,7 +14,7 @@ mkdir /root/.ssh
 cd /hg-agent
 virtualenv --python=/usr/bin/python3 /hg-agent.venv
 source /hg-agent.venv/bin/activate
-pip install pyinstaller==3.4    \
+pip install pyinstaller==3.6    \
             setproctitle==1.1.10  \
             supervisor==4.2.4     \
             psutil==5.9.0         \
