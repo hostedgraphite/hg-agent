@@ -36,9 +36,6 @@ for b in ${BINARIES} ; do
     ln -s /opt/hg-agent/package/binary dist/bin/$b
 done
 
-# Fix for: Error loading Python lib '/opt/hg-agent/bin/libpython3.8.so.1.0'
-#ln -s /opt/hg-agent/package/libpython3.8.so.1.0 dist/bin/libpython3.8.so.1.0
-
 # Packaging scripts
 for s in postinst prerm ; do
     cp scripts/$s dist/bin

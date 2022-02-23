@@ -3,8 +3,11 @@
 
 ## Constants
 readonly PACKAGENAME=hg-agent
-readonly SUPERVISORD="/opt/hg-agent/bin/supervisord"
-readonly PERIODIC="/opt/hg-agent/bin/periodic"
+readonly SUPERVISORD_LINK="/opt/hg-agent/bin/supervisord"
+readonly PERIODIC_LINK="/opt/hg-agent/bin/periodic"
+
+readonly SUPERVISORD_PROCESS="supervisord"
+readonly PERIODIC_PROCESS="periodic"
 
 ## Messages
 
@@ -113,21 +116,21 @@ is_running() {
 test_postinstall() {
     waiting postinstall 10
 
-    is_symlink "$SUPERVISORD" \
-        || fail postinstall "expected symlink $SUPERVISORD"
+    is_symlink "$SUPERVISORD_LINK" \
+        || fail postinstall "expected symlink $SSUPERVISORD_LINK"
 
-    is_running "$SUPERVISORD" \
-        || fail postinstall "expected process for $SUPERVISORD"
+    is_running "$SUPERVISORD_PROCESS" \
+        || fail postinstall "expected process for $SUPERVISORD_PROCESS"
 
-    is_running "$PERIODIC" \
-        || fail postinstall "expected process for $PERIODIC"
+    is_running "$PERIODIC_PROCESS" \
+        || fail postinstall "expected process for $PERIODIC_PROCESS"
 
     succeed postinstall
 }
 
 test_postboot() {
-    is_running "$SUPERVISORD" \
-        || fail postboot "expected process for $SUPERVISORD"
+    is_running "$SUPERVISORD_PROCESS" \
+        || fail postboot "expected process for $SUPERVISORD_PROCESS"
 
     succeed postboot
 }
@@ -135,8 +138,8 @@ test_postboot() {
 test_poststop() {
     waiting poststop 10
 
-    ! is_running "$SUPERVISORD" \
-        || fail poststop "unexpected process for $SUPERVISORD"
+    ! is_running "$SUPERVISORD_PROCESS" \
+        || fail poststop "unexpected process for $SUPERVISORD_PROCESS"
 
     succeed poststop
 }
@@ -144,8 +147,8 @@ test_poststop() {
 test_poststart() {
     waiting poststart 10
 
-    is_running "$SUPERVISORD" \
-        || fail poststart "expected process for $SUPERVISORD"
+    is_running "$SUPERVISORD_PROCESS" \
+        || fail poststart "expected process for $SUPERVISORD_PROCESS"
 
     succeed poststart
 }
@@ -153,14 +156,14 @@ test_poststart() {
 test_postremove() {
     waiting postremove 10
 
-    ! is_symlink "$SUPERVISORD" \
-        || fail postremove "unexpected symlink $SUPERVISORD"
+    ! is_symlink "$SUPERVISORD_LINK" \
+        || fail postremove "unexpected symlink $SUPERVISORD_LINK"
 
-    ! is_running "$SUPERVISORD" \
-        || fail postremove "unexpected process for $SUPERVISORD"
+    ! is_running "$SUPERVISORD_PROCESS" \
+        || fail postremove "unexpected process for $SUPERVISORD_PROCESS"
 
-    ! is_running "$PERIODIC" \
-        || fail postremove "unexpected process for $PERIODIC"
+    ! is_running "$PERIODIC_PROCESS" \
+        || fail postremove "unexpected process for $PERIODIC_PROCESS"
 
     succeed postremove
 }
