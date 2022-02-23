@@ -14,7 +14,7 @@ mkdir /root/.ssh
 cd /hg-agent
 virtualenv --python=/usr/bin/python3 /hg-agent.venv
 source /hg-agent.venv/bin/activate
-pip install pyinstaller==3.6    \
+pip install pyinstaller==4.8    \
             setproctitle==1.1.10  \
             supervisor==4.2.4     \
             psutil==5.9.0         \
@@ -37,7 +37,7 @@ for b in ${BINARIES} ; do
 done
 
 # Fix for: Error loading Python lib '/opt/hg-agent/bin/libpython3.8.so.1.0'
-ln -s /opt/hg-agent/package/libpython3.8.so.1.0 dist/bin/libpython3.8.so.1.0
+#ln -s /opt/hg-agent/package/libpython3.8.so.1.0 dist/bin/libpython3.8.so.1.0
 
 # Packaging scripts
 for s in postinst prerm ; do
