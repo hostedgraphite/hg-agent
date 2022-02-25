@@ -1,6 +1,6 @@
 # A build environment for the Hosted Graphite agent.
 # Because we use PyInstaller, we need to build against the oldest glibc we
-# intend to support: that's 2.12, available in CentOS 6.
+# intend to support: that's 2.17, available in CentOS 7.
 FROM centos:7
 MAINTAINER docker@hostedgraphite.com
 
