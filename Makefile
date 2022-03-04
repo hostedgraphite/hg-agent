@@ -25,6 +25,9 @@ deb:
 	make build-deb INIT=upstart   # Ubuntu 14.04
 	make build-deb INIT=systemd   # Ubuntu > 16.04, Debian >= Jessie
 
+lint:
+	flake8
+
 build-deb:
 	mkdir -p out/deb/$(INIT)/
 	fpm -s dir -t deb -n $(NAME) -v $(VERSION) \

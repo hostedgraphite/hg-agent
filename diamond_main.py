@@ -5,6 +5,14 @@
 import os
 import sys
 import configobj
+import multiprocessing
+import optparse
+import signal
+
+from diamond.server import Server
+from diamond.util import get_diamond_version
+from diamond.utils.log import setup_logging
+
 if os.name != 'nt':
     import pwd
     import grp
@@ -21,14 +29,6 @@ for path in [
     if os.path.exists(os.path.join(path, 'diamond', '__init__.py')):
         sys.path.append(path)
         break
-
-from diamond.server import Server
-from diamond.util import get_diamond_version
-from diamond.utils.log import setup_logging
-
-import multiprocessing
-import optparse
-import signal
 
 
 def main():
@@ -127,7 +127,7 @@ def main():
         log = setup_logging(options.configfile, options.log_stdout)
 
     # Pass the exit up stream rather then handle it as an general exception
-    except SystemExit as e:
+    except SystemExit:
         raise SystemExit
 
     except Exception as e:
@@ -296,7 +296,7 @@ def main():
         server.run()
 
     # Pass the exit up stream rather then handle it as an general exception
-    except SystemExit as e:
+    except SystemExit:
         raise SystemExit
 
     except Exception as e:

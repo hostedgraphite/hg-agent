@@ -95,7 +95,7 @@ class MongoDBCollector(diamond.collector.Collector):
             'user': None,
             'passwd': None,
             'databases': '.*',
-            'ignore_collections': '^tmp\.mr\.',
+            'ignore_collections': r'^tmp\.mr\.',
             'network_timeout': None,
             'simple': 'False',
             'translate_collections': 'False',
