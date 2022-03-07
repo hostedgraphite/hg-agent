@@ -10,7 +10,6 @@ jobs:
     steps:
       - checkout
       - run: mkdir -p $CIRCLE_ARTIFACTS
-      - run: sudo apt-get update
       - run: sudo apt-get clean
       - run: sudo apt-get autoremove
       - run: sudo apt-get -f install
