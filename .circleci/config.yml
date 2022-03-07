@@ -3,7 +3,7 @@ jobs:
 
   build_packages:
     machine:
-      image: circleci/classic:latest
+      image: ubuntu-2004:202201-02
     environment:
       CIRCLE_ARTIFACTS: /tmp/artifacts
 
