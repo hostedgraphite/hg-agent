@@ -84,16 +84,14 @@ package_test:
 	make -C targets/centos8
 	make -C targets/debian-jessie
 	make -C targets/debian-stretch
-	# Not available on Vagrant
-	#make -C targets/debian-buster
+	make -C targets/debian-buster
 	make -C targets/debian-bullseye
 	make -C targets/ubuntu-14.04
 	make -C targets/ubuntu-16.04
 	make -C targets/ubuntu-18.04
-	# Not available on Vagrant
-	#make -C targets/ubuntu-18.10
-	#make -C targets/ubuntu-19.04
-	#make -C targets/ubuntu-19.10
+	make -C targets/ubuntu-18.10
+	make -C targets/ubuntu-19.04
+	make -C targets/ubuntu-19.10
 	make -C targets/ubuntu-20.04
 
 deb-upload:
