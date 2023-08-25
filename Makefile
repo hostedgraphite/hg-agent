@@ -90,9 +90,6 @@ package_test:
 	make -C targets/ubuntu-14.04 test
 	make -C targets/ubuntu-16.04 test
 	make -C targets/ubuntu-18.04 test
-	make -C targets/ubuntu-18.10 test
-	make -C targets/ubuntu-19.04 test
-	make -C targets/ubuntu-19.10 test
 	make -C targets/ubuntu-20.04 test
 	make -C targets/ubuntu-22.04 test
 
@@ -111,9 +108,6 @@ package-upload:
 	make deb-upload DISTRO=ubuntu/trusty   INIT=upstart
 	make deb-upload DISTRO=ubuntu/xenial   INIT=systemd
 	make deb-upload DISTRO=ubuntu/bionic   INIT=systemd
-	make deb-upload DISTRO=ubuntu/cosmic   INIT=systemd
-	make deb-upload DISTRO=ubuntu/disco    INIT=systemd
-	make deb-upload DISTRO=ubuntu/eoan     INIT=systemd
 	make deb-upload DISTRO=ubuntu/focal    INIT=systemd
 	make deb-upload DISTRO=ubuntu/jammy    INIT=systemd
 	make rpm-upload DISTRO=el/7 INIT=systemd
