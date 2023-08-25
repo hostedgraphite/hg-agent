@@ -81,8 +81,6 @@ shell_lint:
 package_test:
 	make -C targets/centos7 test
 	make -C targets/centos8 test
-	make -C targets/debian-jessie test
-	make -C targets/debian-stretch test
 	make -C targets/debian-buster test
 	make -C targets/debian-bullseye test
 	make -C targets/debian-bookworm test
@@ -98,8 +96,6 @@ rpm-upload:
 	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) /tmp/artifacts/out/rpm/$(INIT)/$(NAME)-$(VERSION).$(ARCH).rpm
 
 package-upload:
-	make deb-upload DISTRO=debian/jessie   INIT=systemd
-	make deb-upload DISTRO=debian/stretch  INIT=systemd
 	make deb-upload DISTRO=debian/buster   INIT=systemd
 	make deb-upload DISTRO=debian/bullseye INIT=systemd
 	make deb-upload DISTRO=debian/bookworm INIT=systemd
