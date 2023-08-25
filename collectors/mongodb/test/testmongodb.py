@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
@@ -19,7 +19,7 @@ try:
 except ImportError:
     import simplejson as json
 
-
+long = int
 ##########################################################################
 
 
@@ -28,7 +28,7 @@ def run_only_if_pymongo_is_available(func):
         import pymongo
     except ImportError:
         pymongo = None
-    pred = lambda: pymongo is not None
+    pred = lambda: pymongo is not None  # noqa: E731
     return run_only(func, pred)
 
 
@@ -175,9 +175,9 @@ class TestMongoDBCollector(CollectorTestCase):
         # should not happen, but it did (once), so lets check it
         datapoints_per_metric = defaultdict(int)
         for c in publish_mock.call_args_list:
-            m, v = c[0][0], c[0][1]
+            m, v = c[0][0], c[0][1]  # noqa: F841
             datapoints_per_metric[m] += 1
-        dupes = [m for m, n in datapoints_per_metric.iteritems() if n > 1]
+        dupes = [m for m, n in datapoints_per_metric.items() if n > 1]
         self.assertEqual(len(dupes), 0,
                          'BUG: 1+ point for same metric received: %s' %
                          ', '.join(dupes))

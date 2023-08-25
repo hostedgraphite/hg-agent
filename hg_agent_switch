@@ -15,7 +15,6 @@ import setproctitle
 import supervisor.supervisord
 import supervisor.supervisorctl
 import sys
-import time
 
 from hg_agent_forwarder import receiver_main, forwarder_main
 from hg_agent_periodic import periodic, config, diamond_config
@@ -54,27 +53,27 @@ def run_receiver():
 
 
 def main():
-    switch = {'diamond': run_diamond,
-              'periodic': run_periodic,
-              'forwarder': run_forwarder,
-              'receiver': run_receiver,
-              'config': run_config,
-              'diamond-config': run_diamond_config,
-              'supervisorctl': run_supervisorctl,
-              'supervisord': run_supervisord}
+    switch = {
+        'diamond': run_diamond,
+        'periodic': run_periodic,
+        'forwarder': run_forwarder,
+        'receiver': run_receiver,
+        'config': run_config,
+        'diamond-config': run_diamond_config,
+        'supervisorctl': run_supervisorctl,
+        'supervisord': run_supervisord
+    }
 
     name = os.path.basename(sys.argv[0])
     if name not in switch.keys():
-        print ('Invoked with unrecognized command name `%s`.\n'
-               'Options are: %s') % (name, switch.keys())
+        print(f'Invoked with unrecognized command name `{name}`.\nOptions are: {switch.keys()}')
         sys.exit(1)
 
     try:
         setproctitle.setproctitle('hg-agent-%s' % name)
         switch[name]()
     except Exception as e:
-        print ('Invoking command name %s resulted in the'
-               ' following exception: %s') % (name, e)
+        print(f'Invoking command name {name} resulted in the following exception: {e}')
         sys.exit(1)
 
 

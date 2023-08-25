@@ -21,6 +21,7 @@ MongoDBCollector.conf
     hosts = localhost:27017, alias1@localhost:27018, etc
 ```
 """
+from functools import reduce
 
 import diamond.collector
 import datetime
@@ -94,7 +95,7 @@ class MongoDBCollector(diamond.collector.Collector):
             'user': None,
             'passwd': None,
             'databases': '.*',
-            'ignore_collections': '^tmp\.mr\.',
+            'ignore_collections': r'^tmp\.mr\.',
             'network_timeout': None,
             'simple': 'False',
             'translate_collections': 'False',
@@ -115,7 +116,7 @@ class MongoDBCollector(diamond.collector.Collector):
         hosts = self.config.get('hosts')
 
         # Convert a string config value to be an array
-        if isinstance(hosts, basestring):
+        if isinstance(hosts, str):
             hosts = [hosts]
 
         # we need this for backwards compatibility
@@ -124,13 +125,11 @@ class MongoDBCollector(diamond.collector.Collector):
 
         # convert network_timeout to integer
         if self.config['network_timeout']:
-            self.config['network_timeout'] = int(
-                self.config['network_timeout'])
+            self.config['network_timeout'] = int(self.config['network_timeout'])
 
         # convert collection_sample_rate to float
         if self.config['collection_sample_rate']:
-            self.config['collection_sample_rate'] = float(
-                self.config['collection_sample_rate'])
+            self.config['collection_sample_rate'] = float(self.config['collection_sample_rate'])
 
         # use auth if given
         if 'user' in self.config:
@@ -144,7 +143,7 @@ class MongoDBCollector(diamond.collector.Collector):
             passwd = None
 
         for host in hosts:
-            matches = re.search('((.+)\@)?(.+)?', host)
+            matches = re.search(r'((.+)\@)?(.+)?', host)
             alias = matches.group(2)
             host = matches.group(3)
 
@@ -153,7 +152,7 @@ class MongoDBCollector(diamond.collector.Collector):
                     # one host only, no need to have a prefix
                     base_prefix = []
                 else:
-                    base_prefix = [re.sub('[:\.]', '_', host)]
+                    base_prefix = [re.sub(r'[:\.]', '_', host)]
             else:
                 base_prefix = [alias]
 
@@ -175,7 +174,7 @@ class MongoDBCollector(diamond.collector.Collector):
                         ssl=self.config['ssl'],
                         read_preference=ReadPreference.SECONDARY,
                     )
-            except Exception, e:
+            except Exception as e:
                 self.log.error('Couldnt connect to mongodb: %s', e)
                 continue
 
@@ -183,7 +182,7 @@ class MongoDBCollector(diamond.collector.Collector):
             if user:
                 try:
                     conn.admin.authenticate(user, passwd)
-                except Exception, e:
+                except Exception as e:
                     self.log.error(
                         'User auth given, but could not autheticate' +
                         ' with host: %s, err: %s' % (host, e))
@@ -219,8 +218,7 @@ class MongoDBCollector(diamond.collector.Collector):
                     ) > sample_threshold):
                         continue
 
-                    collection_stats = conn[db_name].command('collstats',
-                                                             collection_name)
+                    collection_stats = conn[db_name].command('collstats', collection_name)
                     if str_to_bool(self.config['translate_collections']):
                         collection_name = collection_name.replace('.', '_')
                     collection_prefix = db_prefix + [collection_name]
@@ -235,13 +233,9 @@ class MongoDBCollector(diamond.collector.Collector):
         prefix = base_prefix + ['replset']
         self._publish_dict_with_prefix(data, prefix)
         total_nodes = len(data['members'])
-        healthy_nodes = reduce(lambda value, node: value + node['health'],
-                               data['members'], 0)
+        healthy_nodes = reduce(lambda value, node: value + node['health'], data['members'], 0)
 
-        self._publish_dict_with_prefix({
-            'healthy_nodes': healthy_nodes,
-            'total_nodes': total_nodes
-        }, prefix)
+        self._publish_dict_with_prefix({'healthy_nodes': healthy_nodes, 'total_nodes': total_nodes}, prefix)
         for node in data['members']:
             replset_node_name = node[self.config['replset_node_name']]
             node_name = str(replset_node_name.split('.')[0])
@@ -249,24 +243,34 @@ class MongoDBCollector(diamond.collector.Collector):
 
     def _publish_transformed(self, data, base_prefix):
         """ Publish values of type: counter or percent """
-        self._publish_dict_with_prefix(data.get('opcounters', {}),
-                                       base_prefix + ['opcounters_per_sec'],
-                                       self.publish_counter)
-        self._publish_dict_with_prefix(data.get('opcountersRepl', {}),
-                                       base_prefix +
-                                       ['opcountersRepl_per_sec'],
-                                       self.publish_counter)
-        self._publish_metrics(base_prefix + ['backgroundFlushing_per_sec'],
-                              'flushes',
-                              data.get('backgroundFlushing', {}),
-                              self.publish_counter)
-        self._publish_dict_with_prefix(data.get('network', {}),
-                                       base_prefix + ['network_per_sec'],
-                                       self.publish_counter)
-        self._publish_metrics(base_prefix + ['extra_info_per_sec'],
-                              'page_faults',
-                              data.get('extra_info', {}),
-                              self.publish_counter)
+        self._publish_dict_with_prefix(
+            data.get('opcounters', {}),
+            base_prefix + ['opcounters_per_sec'],
+            self.publish_counter
+        )
+        self._publish_dict_with_prefix(
+            data.get('opcountersRepl', {}),
+            base_prefix +
+            ['opcountersRepl_per_sec'],
+            self.publish_counter
+        )
+        self._publish_metrics(
+            base_prefix + ['backgroundFlushing_per_sec'],
+            'flushes',
+            data.get('backgroundFlushing', {}),
+            self.publish_counter
+        )
+        self._publish_dict_with_prefix(
+            data.get('network', {}),
+            base_prefix + ['network_per_sec'],
+            self.publish_counter
+        )
+        self._publish_metrics(
+            base_prefix + ['extra_info_per_sec'],
+            'page_faults',
+            data.get('extra_info', {}),
+            self.publish_counter
+        )
 
         def get_dotted_value(data, key_name):
             key_name = key_name.split('.')
@@ -288,12 +292,10 @@ class MongoDBCollector(diamond.collector.Collector):
             value = float(get_dotted_value(data, value_name) * 100)
             interval = compute_interval(data, total_name)
             key = '.'.join(base_prefix + ['percent', value_name])
-            self.publish_counter(key, value, time_delta=bool(interval),
-                                 interval=interval)
+            self.publish_counter(key, value, time_delta=bool(interval), interval=interval)
 
         publish_percent('globalLock.lockTime', 'globalLock.totalTime', data)
-        publish_percent('indexCounters.btree.misses',
-                        'indexCounters.btree.accesses', data)
+        publish_percent('indexCounters.btree.misses', 'indexCounters.btree.accesses', data)
 
         locks = data.get('locks')
         if locks:
@@ -306,29 +308,29 @@ class MongoDBCollector(diamond.collector.Collector):
             for db_name in locks:
                 if not db_name_filter.search(db_name):
                     continue
-                r = get_dotted_value(
-                    locks,
-                    '%s.timeLockedMicros.r' % db_name)
-                R = get_dotted_value(
-                    locks,
-                    '.%s.timeLockedMicros.R' % db_name)
+                r = get_dotted_value(locks, '%s.timeLockedMicros.r' % db_name)
+                R = get_dotted_value(locks, '.%s.timeLockedMicros.R' % db_name)
                 value = float(r + R) / 10
                 if value:
                     self.publish_counter(
                         key_prefix + '.locks.%s.read' % db_name,
                         value, time_delta=bool(interval),
-                        interval=interval)
+                        interval=interval
+                    )
                 w = get_dotted_value(
                     locks,
-                    '%s.timeLockedMicros.w' % db_name)
+                    '%s.timeLockedMicros.w' % db_name
+                )
                 W = get_dotted_value(
                     locks,
-                    '%s.timeLockedMicros.W' % db_name)
+                    '%s.timeLockedMicros.W' % db_name
+                )
                 value = float(w + W) / 10
                 if value:
                     self.publish_counter(
                         key_prefix + '.locks.%s.write' % db_name,
-                        value, time_delta=bool(interval), interval=interval)
+                        value, time_delta=bool(interval), interval=interval
+                    )
 
     def _publish_dict_with_prefix(self, dict, prefix, publishfn=None):
         for key in dict:
@@ -348,10 +350,8 @@ class MongoDBCollector(diamond.collector.Collector):
                 self._publish_metrics(keys, new_key, value)
         elif isinstance(value, int) or isinstance(value, float):
             publishfn('.'.join(keys), value)
-        elif isinstance(value, long):
-            publishfn('.'.join(keys), float(value))
         elif isinstance(value, datetime.datetime):
-            publishfn('.'.join(keys), long(value.strftime('%s')))
+            publishfn('.'.join(keys), int(value.strftime('%s')))
 
     def _extract_simple_data(self, data):
         return {

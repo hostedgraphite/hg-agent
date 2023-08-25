@@ -8,27 +8,23 @@ fi
 
 VERSION=$1
 
-cp -r /root/ssh_copy /root/.ssh
-chown -R root /root/.ssh
-
-# Use the container's user for this
-sed -i 's/ubuntu/root/' /root/.ssh/config
-sed -i 's/\/home//' /root/.ssh/config
+mkdir /root/.ssh
+\cp -r /root/ssh_copy/* /root/.ssh
 
 cd /hg-agent
-virtualenv /hg-agent.venv
+virtualenv --python=/usr/bin/python3 /hg-agent.venv
 source /hg-agent.venv/bin/activate
-pip install pyinstaller==3.1.1    \
+pip install pyinstaller==4.8    \
             setproctitle==1.1.10  \
-            supervisor==3.3.1     \
-            diamond==4.0.451      \
-            psutil==5.1.3         \
-            multitail2==1.4.1     \
-            pymongo==3.5.1       \
-            'git+ssh://git@github.com/hostedgraphite/hg-agent-periodic.git@fb2ec635152839d72170d11d3d07c46370132702#egg=hg_agent_periodic'\
-            'git+ssh://git@github.com/hostedgraphite/hg-agent-forwarder.git@21dbc1a2528d4431a4a9a2c755513f4129b68c14#egg=hg_agent_forwarder'
+            supervisor==4.2.4     \
+            psutil==5.9.0         \
+            pymongo==3.12.3       \
+            'git+ssh://git@github.com/metricfire/python-multitail2.git@master#egg=multitail2'\
+            'git+ssh://git@github.com/hostedgraphite/hg-agent-periodic.git@master#egg=hg_agent_periodic'\
+            'git+ssh://git@github.com/hostedgraphite/Diamond.git@master#egg=diamond'\
+            'git+ssh://git@github.com/hostedgraphite/hg-agent-forwarder.git@master#egg=hg_agent_forwarder'
 # Workaround a PyInstaller issue with namespaced packages, cf. goo.gl/CnuoMo
-touch /hg-agent.venv/lib/python2.7/site-packages/supervisor/__init__.py
+touch /hg-agent.venv/lib/python3.8/site-packages/supervisor/__init__.py
 
 pyinstaller -y data/hg-agent.spec
 

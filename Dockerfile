@@ -1,31 +1,35 @@
 # A build environment for the Hosted Graphite agent.
 # Because we use PyInstaller, we need to build against the oldest glibc we
-# intend to support: that's 2.12, available in CentOS 6.
-FROM centos:6
+# intend to support: that's 2.17, available in CentOS 7.
+FROM centos:7
 MAINTAINER docker@hostedgraphite.com
 
 ADD data /data/
 
+# Enable epel-release for yum
+RUN yum --enablerepo=extras install epel-release -y
+
+# Install required packages including packages for Python3 installation
 RUN yum -y update && \
     yum groupinstall -y development && \
-    yum install -y zlib-dev openssl-devel sqlite-devel bzip2-devel wget
+    yum -y install openssl-devel bzip2-devel libffi-devel xz-devel wget
 
 # Build & install a modern Python
-RUN wget http://www.python.org/ftp/python/2.7.12/Python-2.7.12.tar.xz && \
-    tar -xJf Python-2.7.12.tar.xz && \
-    cd Python-2.7.12 && \
-    ./configure --prefix=/usr/local --enable-shared && \
-    make && \
+RUN wget https://www.python.org/ftp/python/3.8.8/Python-3.8.8.tgz && \
+    tar xzf Python-3.8.8.tgz && \
+    cd Python-3.8.8 && \
+    ./configure --enable-optimizations --enable-shared && \
     make altinstall
 
-# Add /usr/local/lib to ld.so's path.
-RUN cp /data/usrlocal.conf /etc/ld.so.conf.d && \
-    ldconfig -v
+# Add link for python3
+RUN ln -sfn /usr/local/bin/python3.8 /usr/bin/python3
 
-# Get pip & virtualenv up and running.
-RUN wget https://bootstrap.pypa.io/ez_setup.py -O - | /usr/local/bin/python2.7 && \
-    wget https://bootstrap.pypa.io/get-pip.py -O - | /usr/local/bin/python2.7 && \
-    /usr/local/bin/pip install virtualenv
+# Add /usr/local/lib to ld.so's path.
+RUN cp /data/usrlocal.conf /etc/ld.so.conf.d && ldconfig -v
+
+# Get pip and virtualenv up and running.
+RUN ln -s /usr/local/bin/pip3.8 /usr/bin/pip
+RUN /usr/bin/pip install virtualenv
 
 # Install the UPX executable packer.
 RUN wget https://github.com/upx/upx/releases/download/v3.91/upx-3.91-amd64_linux.tar.bz2 && \

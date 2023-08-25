@@ -1,27 +1,31 @@
 NAME=hg-agent
-VERSION=1.18
+VERSION=2.0
 ARCH=amd64
 
 docker:
-	docker build -t hostedgraphite/hg-agent-build .
+	docker build -t hostedgraphite/hg-agent-build-os7-py3 .
 	@echo "You can upload the image with:"
 	@echo "docker push hostedgraphite/hg-agent-build"
 	@echo "(and the right credentials!)"
 
 build:
-	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)
+	docker run -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build-os7-py3 bash /hg-agent/build.sh $(VERSION)
+
+buildtest:
+	docker run -it -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build-os7-py3 bash
 
 buildlocal:
-	docker run -v $(SSH_AUTH_SOCK):/ssh-agent --env SSH_AUTH_SOCK=/ssh-agent -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build bash /hg-agent/build.sh $(VERSION)
+	docker run -v $(SSH_AUTH_SOCK):/ssh-agent --env SSH_AUTH_SOCK=/ssh-agent -v $(HOME)/.ssh:/root/ssh_copy -v $(PWD):/hg-agent hostedgraphite/hg-agent-build-os7-py3 bash /hg-agent/build.sh $(VERSION)
 
 package:
 	make deb
 	make rpm
 
 deb:
-	make build-deb INIT=sysvinit  # Debian < Jessie
-	make build-deb INIT=upstart   # Ubuntu 1{2,4}.04
 	make build-deb INIT=systemd   # Ubuntu > 16.04, Debian >= Jessie
+
+lint:
+	flake8
 
 build-deb:
 	mkdir -p out/deb/$(INIT)/
@@ -46,8 +50,7 @@ build-deb:
  		$(INIT)/root/=/
 
 rpm:
-	make build-rpm INIT=sysvinit # RHEL family 6
-	make build-rpm INIT=systemd  # RHEL family 7
+	make build-rpm INIT=systemd  # RHEL family >7
 
 build-rpm:
 	mkdir -p out/rpm/$(INIT)/
@@ -76,16 +79,15 @@ shell_lint:
 	docker run -v $(PWD):/hg-agent koalaman/shellcheck /hg-agent/package_test
 
 package_test:
-	make -C targets/centos6
-	make -C targets/centos7
-	make -C targets/debian-wheezy
-	make -C targets/debian-jessie
-	make -C targets/debian-stretch
-	make -C targets/ubuntu-12.04
-	make -C targets/ubuntu-14.04
-	make -C targets/ubuntu-16.04
-	make -C targets/ubuntu-18.04
-	make -C targets/ubuntu-18.10
+	make -C targets/centos7 test
+	make -C targets/centos8 test
+	make -C targets/debian-buster test
+	make -C targets/debian-bullseye test
+	make -C targets/debian-bookworm test
+	make -C targets/ubuntu-16.04 test
+	make -C targets/ubuntu-18.04 test
+	make -C targets/ubuntu-20.04 test
+	make -C targets/ubuntu-22.04 test
 
 deb-upload:
 	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) /tmp/artifacts/out/deb/$(INIT)/$(NAME)_$(VERSION)_$(ARCH).deb
@@ -94,15 +96,14 @@ rpm-upload:
 	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) /tmp/artifacts/out/rpm/$(INIT)/$(NAME)-$(VERSION).$(ARCH).rpm
 
 package-upload:
-	make deb-upload DISTRO=debian/wheezy  INIT=sysvinit
-	make deb-upload DISTRO=debian/jessie  INIT=systemd
-	make deb-upload DISTRO=debian/stretch INIT=systemd
-	make deb-upload DISTRO=ubuntu/precise INIT=upstart
-	make deb-upload DISTRO=ubuntu/trusty  INIT=upstart
-	make deb-upload DISTRO=ubuntu/xenial  INIT=systemd
-	make deb-upload DISTRO=ubuntu/bionic  INIT=systemd
-	make deb-upload DISTRO=ubuntu/cosmic  INIT=systemd
-	make rpm-upload DISTRO=el/6 INIT=sysvinit
+	make deb-upload DISTRO=debian/buster   INIT=systemd
+	make deb-upload DISTRO=debian/bullseye INIT=systemd
+	make deb-upload DISTRO=debian/bookworm INIT=systemd
+	make deb-upload DISTRO=ubuntu/xenial   INIT=systemd
+	make deb-upload DISTRO=ubuntu/bionic   INIT=systemd
+	make deb-upload DISTRO=ubuntu/focal    INIT=systemd
+	make deb-upload DISTRO=ubuntu/jammy    INIT=systemd
 	make rpm-upload DISTRO=el/7 INIT=systemd
+	make rpm-upload DISTRO=el/8 INIT=systemd
 
 .PHONY: docker build package deb build-deb rpm build-rpm shell_lint package_test deb-upload rpm-upload package-upload
