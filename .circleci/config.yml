@@ -3,7 +3,7 @@ jobs:
 
   build_packages:
     machine:
-      image: ubuntu-2004:202201-02
+      image: ubuntu-2204:current
     environment:
       CIRCLE_ARTIFACTS: /tmp/artifacts
 
@@ -29,7 +29,7 @@ jobs:
 
   upload_packages:
     machine:
-      image: circleci/classic:latest
+      image: ubuntu-2204:current
     environment:
       CIRCLE_ARTIFACTS: /tmp/artifacts
 
