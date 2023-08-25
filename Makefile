@@ -86,6 +86,7 @@ package_test:
 	make -C targets/debian-stretch test
 	make -C targets/debian-buster test
 	make -C targets/debian-bullseye test
+	make -C targets/debian-bookworm test
 	make -C targets/ubuntu-14.04 test
 	make -C targets/ubuntu-16.04 test
 	make -C targets/ubuntu-18.04 test
@@ -106,6 +107,7 @@ package-upload:
 	make deb-upload DISTRO=debian/stretch  INIT=systemd
 	make deb-upload DISTRO=debian/buster   INIT=systemd
 	make deb-upload DISTRO=debian/bullseye INIT=systemd
+	make deb-upload DISTRO=debian/bookworm INIT=systemd
 	make deb-upload DISTRO=ubuntu/trusty   INIT=upstart
 	make deb-upload DISTRO=ubuntu/xenial   INIT=systemd
 	make deb-upload DISTRO=ubuntu/bionic   INIT=systemd
