@@ -19,10 +19,10 @@ pip install pyinstaller==4.8    \
             supervisor==4.2.4     \
             psutil==5.9.0         \
             pymongo==3.12.3       \
-            'git+ssh://git@github.com/metricfire/python-multitail2.git@v2.0.0#egg=multitail2'\
-            'git+ssh://git@github.com/hostedgraphite/hg-agent-periodic.git@v2.0.0#egg=hg_agent_periodic'\
-            'git+ssh://git@github.com/hostedgraphite/Diamond.git@v5.0.0#egg=diamond'\
-            'git+ssh://git@github.com/hostedgraphite/hg-agent-forwarder.git@v2.0.0#egg=hg_agent_forwarder'
+            'git+ssh://git@github.com/metricfire/python-multitail2.git@master#egg=multitail2'\
+            'git+ssh://git@github.com/hostedgraphite/hg-agent-periodic.git@master#egg=hg_agent_periodic'\
+            'git+ssh://git@github.com/hostedgraphite/Diamond.git@master#egg=diamond'\
+            'git+ssh://git@github.com/hostedgraphite/hg-agent-forwarder.git@master#egg=hg_agent_forwarder'
 # Workaround a PyInstaller issue with namespaced packages, cf. goo.gl/CnuoMo
 touch /hg-agent.venv/lib/python3.8/site-packages/supervisor/__init__.py
 
