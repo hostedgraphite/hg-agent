@@ -80,19 +80,20 @@ shell_lint:
 	docker run -v $(PWD):/hg-agent koalaman/shellcheck /hg-agent/package_test
 
 package_test:
-	make -C targets/centos7
-	make -C targets/centos8
-	make -C targets/debian-jessie
-	make -C targets/debian-stretch
-	make -C targets/debian-buster
-	make -C targets/debian-bullseye
-	make -C targets/ubuntu-14.04
-	make -C targets/ubuntu-16.04
-	make -C targets/ubuntu-18.04
-	make -C targets/ubuntu-18.10
-	make -C targets/ubuntu-19.04
-	make -C targets/ubuntu-19.10
-	make -C targets/ubuntu-20.04
+	make -C targets/centos7 test
+	make -C targets/centos8 test
+	make -C targets/debian-jessie test
+	make -C targets/debian-stretch test
+	make -C targets/debian-buster test
+	make -C targets/debian-bullseye test
+	make -C targets/ubuntu-14.04 test
+	make -C targets/ubuntu-16.04 test
+	make -C targets/ubuntu-18.04 test
+	make -C targets/ubuntu-18.10 test
+	make -C targets/ubuntu-19.04 test
+	make -C targets/ubuntu-19.10 test
+	make -C targets/ubuntu-20.04 test
+	make -C targets/ubuntu-22.04 test
 
 deb-upload:
 	package_cloud push hostedgraphite/$(NAME)/$(DISTRO) /tmp/artifacts/out/deb/$(INIT)/$(NAME)_$(VERSION)_$(ARCH).deb
@@ -112,6 +113,7 @@ package-upload:
 	make deb-upload DISTRO=ubuntu/disco    INIT=systemd
 	make deb-upload DISTRO=ubuntu/eoan     INIT=systemd
 	make deb-upload DISTRO=ubuntu/focal    INIT=systemd
+	make deb-upload DISTRO=ubuntu/jammy    INIT=systemd
 	make rpm-upload DISTRO=el/7 INIT=systemd
 	make rpm-upload DISTRO=el/8 INIT=systemd
 
